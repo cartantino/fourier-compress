@@ -6,7 +6,7 @@ from datetime import datetime
 import csv
 import os
 
-
+## DCT1 FUNCTION; returns frequency coefficients  array
 def dct_1(arr):
     n = arr.size
     c_k = np.zeros(n)
@@ -16,12 +16,9 @@ def dct_1(arr):
             alfa = math.sqrt(1/n)
         else:
             alfa = math.sqrt(2/n)
-
         sum = 0
-
         for x,f_i in enumerate(arr):
             sum += f_i * math.cos((k * math.pi * (2 * x + 1)) / (2 * n)) #summatory from 0 to N-1 of dct
-            
         c_k[k] = sum * alfa
     
     return c_k
@@ -34,9 +31,11 @@ def dct_2(mat, dimension):
     
 
 if __name__ == '__main__':
-    dimensions_matrix = [10,20,50,100,200,500,1000,2000,5000]
-    os.remove('results/dct2_nostra.csv')
-    os.remove('results/dct2_fft.csv')
+    dimensions_matrix = [10,20,50,70,90, 100, 130, 200, 250, 300, 400, 500,700, 750, 800, 900, 1000]
+    if os.path.isfile('results/dct2_nostra.csv'):
+        os.remove('results/dct2_nostra.csv')
+    if os.path.isfile('results/dct2_fft.csv'):
+        os.remove('results/dct2_fft.csv')
 
     for i in dimensions_matrix:
 
@@ -46,24 +45,25 @@ if __name__ == '__main__':
         now = datetime.now()
         dct2_results = dct_2(matrix, i)
         t_dct2 = datetime.now() - now
-        print(t_dct2)
+        print("our dct time: " + str(t_dct2) + "\n")
         print("Writing results on CSV of our dct\n")
         with open('results/dct2_nostra.csv', 'a') as csvFile:
-            row = [i, t_dct2]
+            row = [i, t_dct2.seconds,t_dct2.microseconds]
             writer = csv.writer(csvFile)
             writer.writerow(row)
         csvFile.close()
         
         ####   DCT2 FFT    ######
-        print("Starting evaluation of fft dct2")
+        print("\n\nStarting evaluation of fft dct2")
         
         now = datetime.now()
         dct_fft = dct(matrix,type = 2, norm = 'ortho')
         t_fft = datetime.now() - now
+        print("time fft: " + str(t_fft) + "\n")
 
         print("Writing results on CSV of fft dct\n")
         with open('results/dct2_fft.csv', 'a') as csvFile:
-            row = [i, t_fft]
+            row = [i, t_fft.seconds, t_fft.microseconds]
             writer = csv.writer(csvFile)
             writer.writerow(row)
         csvFile.close()
