@@ -12,10 +12,8 @@ def dct_1(arr):
     c_k = np.zeros(n)
     
     for k in range(n):
-        if k == 0:
-            alfa = math.sqrt(1/n)
-        else:
-            alfa = math.sqrt(2/n)
+        alfa = math.sqrt(1/n) if k == 0 else math.sqrt(2/n)
+
         sum = 0
         for x,f_i in enumerate(arr):
             sum += f_i * math.cos((k * math.pi * (2 * x + 1)) / (2 * n)) #summatory from 0 to N-1 of dct
@@ -24,7 +22,7 @@ def dct_1(arr):
     return c_k
 
 #dct2 homemade function
-def dct_2(mat, dimension):
+def dct_2(mat):
     result_matrix = np.zeros(mat.shape)
     result_matrix = np.apply_along_axis(dct_1, 1, mat) #iteration of the rows of the array
     result_matrix = np.apply_along_axis(dct_1, 0, result_matrix) #iteration of the transposed array evaluated at the previous step
@@ -32,7 +30,7 @@ def dct_2(mat, dimension):
     
 
 if __name__ == '__main__':
-    dimensions_matrix = [10,20,50,70,90, 100, 130, 200, 250, 300, 400, 500,700, 750, 800, 900, 1000]
+    dimensions_matrix = [10, 20, 50, 70, 90]#, 100, 130, 200, 250, 300, 400, 500, 700, 750, 800, 900, 1000]
     if os.path.isfile('results/dct2_nostra.csv'):
         os.remove('results/dct2_nostra.csv')
     if os.path.isfile('results/dct2_fft.csv'):
@@ -40,14 +38,14 @@ if __name__ == '__main__':
 
     for i in dimensions_matrix:
 
-        print("Working on " + str(i) + "*" + str(i) + " Matrix\n")
+        print("***** Working on " + str(i) + "x" + str(i) + " Matrix *****")
         matrix = np.random.uniform(low=0.0, high=255.0, size=(i, i)) #generate a random array, with values in an uniform distribution between 0 and 255
         
         now = datetime.now()
-        dct2_results = dct_2(matrix, i)
+        dct2_results = dct_2(matrix)
         t_dct2 = (datetime.now() - now).total_seconds()
-        print("our dct time: " + str(t_dct2) + "\n")
-        print("Writing results on CSV of our dct\n")
+        print("Time Our DCT: " + str(t_dct2))
+
         with open('results/dct2_nostra.csv', 'a') as csvFile:
             row = [i, t_dct2]
             writer = csv.writer(csvFile)
@@ -55,14 +53,11 @@ if __name__ == '__main__':
         csvFile.close()
         
         ####   DCT2 FFT    ######
-        print("\n\nStarting evaluation of fft dct2")
-        
         now = datetime.now()
         dct_fft = dct(matrix,type = 2, norm = 'ortho')
         t_fft = (datetime.now() - now).total_seconds()
-        print("time fft: " + str(t_fft) + "\n")
+        print("Time FFT DCT: " + str(t_fft))
 
-        print("Writing results on CSV of fft dct\n")
         with open('results/dct2_fft.csv', 'a') as csvFile:
             row = [i, t_fft]
             writer = csv.writer(csvFile)
