@@ -12,10 +12,8 @@ def dct_1(arr):
     c_k = np.zeros(n)
     
     for k in range(n):
-        if k == 0:
-            alfa = math.sqrt(1/n)
-        else:
-            alfa = math.sqrt(2/n)
+        alfa = math.sqrt(1/n) if k == 0 else math.sqrt(2/n)
+
         sum = 0
         for x,f_i in enumerate(arr):
             sum += f_i * math.cos((k * math.pi * (2 * x + 1)) / (2 * n)) #summatory from 0 to N-1 of dct
@@ -32,7 +30,7 @@ def dct_2(mat):
     
 
 if __name__ == '__main__':
-    dimensions_matrix = [10, 20, 50, 70, 90, 100, 130, 200, 250, 300, 400, 500, 700, 750, 800, 900, 1000]
+    dimensions_matrix = [10, 20, 50, 70, 90]#, 100, 130, 200, 250, 300, 400, 500, 700, 750, 800, 900, 1000]
     if os.path.isfile('results/dct2_nostra.csv'):
         os.remove('results/dct2_nostra.csv')
     if os.path.isfile('results/dct2_fft.csv'):
