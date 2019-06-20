@@ -77,7 +77,7 @@ class App(QWidget):
     def on_click_d_f(self):
         self.textboxValue_f = self.textbox_f.text()
         self.textboxValue_d = self.textbox_d.text()
-        print(textboxValue_f)
+        print(self.textboxValue_f)
         print(self.file_path)
 
 
