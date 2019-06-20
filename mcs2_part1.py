@@ -32,7 +32,7 @@ def dct_2(mat):
     
 
 if __name__ == '__main__':
-    dimensions_matrix = [10, 20, 50, 70, 90, 100, 130, 200, 250]#, 300, 400, 500, 700, 750, 800, 900, 1000]
+    dimensions_matrix = [10, 20, 50, 70, 90, 100, 130, 200, 250, 300, 400, 500, 700, 750, 800, 900, 1000]
     if os.path.isfile('results/dct2_nostra.csv'):
         os.remove('results/dct2_nostra.csv')
     if os.path.isfile('results/dct2_fft.csv'):
