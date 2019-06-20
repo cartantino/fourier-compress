@@ -11,7 +11,7 @@ import matplotlib.pyplot as mplp
 
 # cell dct evaluation of the input image
 def dct_compression(image, F, d):
-    compressed_image = image + 0 #copy to store the original image
+    #compressed_image = image #copy to store the original image
     h = image.shape[0]
     print(h)
     w = image.shape[1]
@@ -22,7 +22,7 @@ def dct_compression(image, F, d):
     if(w%F != 0):
         w = int(w/F) * F
         print(w)
-
+    compressed_image = image[0:h, 0:w]
     print(h)
     print(w)
     # cycle the image in step of F
@@ -36,23 +36,23 @@ def dct_compression(image, F, d):
             c_h = cell.shape[0]
             c_w = cell.shape[1]
             # delete the frequencies in the cell making reference to d parameter
-            for x in range(0,c_h):
-                for y in range(0,c_w):
-                    if x+y >= d:
-                        cell[x,y] = 0 
+            for i in range(0,c_h):
+                for j in range(0,c_w):
+                    if i+j >= d:
+                        cell[i,j] = 0 
 
             # compute the inverse dct of the cell
             cell = idctn(cell, norm = 'ortho')
 
             #round of ff at the nearest integer, put to 0 negative values, put to 255 bigger values
-            for x in range(0,c_h):
-                for y in range(0,c_w):
-                    value = round(cell[x,y])
+            for i in range(0,c_h):
+                for j in range(0,c_w):
+                    value = round(cell[i,j])
                     if value < 0:
                         value = 0
                     elif value > 255:
                         value = 255
-                    cell[x,y] = value
+                    cell[i,j] = value
             compressed_image[x:x+F, y:y+F] = cell
 
     return compressed_image
@@ -70,10 +70,7 @@ if __name__ ==  '__main__':
         if (image.ndim >= 3):
             image = image[:,:,0]
         image_compressed = dct_compression(image, F, d)
-
-    
-    
+        
     mplp.imshow(image_compressed, cmap='gray')
-    
 	
     mplp.show()   
