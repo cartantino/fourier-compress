@@ -1,0 +1,41 @@
+name: mcs2
+channels:
+  - dsdale24
+  - anaconda
+  - cvxgrp
+  - conda-forge
+  - defaults
+dependencies:
+  - blas=1.0
+  - ca-certificates=2019.5.15
+  - certifi=2017.1.23
+  - icc_rt=2019.0.0
+  - icu=54.1
+  - intel-openmp=2019.4
+  - jpeg=8d
+  - libblas=3.8.0
+  - libcblas=3.8.0
+  - liblapack=3.8.0
+  - libpng=1.6.28
+  - libtiff=4.0.6
+  - mkl=2019.4
+  - numpy=1.10.1
+  - openssl=1.0.2h
+  - pip=9.0.1
+  - pyqt=4.11.4
+  - pyqt5=5.3.2
+  - python=3.4.5
+  - qt=4.8.7
+  - qt5=5.4.0
+  - scipy=0.16.0
+  - setuptools=32.3.1
+  - sip=4.18
+  - sqlite=3.16.2
+  - vc=10
+  - vs2010_runtime=10.00.40219.1
+  - vs2015_runtime=15.5.2
+  - wheel=0.29.0
+  - wincertstore=0.2
+  - zlib=1.2.8
+prefix: C:\Users\co996\Miniconda3\envs\mcs2
+
