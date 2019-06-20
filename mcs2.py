@@ -44,11 +44,11 @@ if __name__ == '__main__':
         
         now = datetime.now()
         dct2_results = dct_2(matrix, i)
-        t_dct2 = datetime.now() - now
+        t_dct2 = (datetime.now() - now).total_seconds()
         print("our dct time: " + str(t_dct2) + "\n")
         print("Writing results on CSV of our dct\n")
         with open('results/dct2_nostra.csv', 'a') as csvFile:
-            row = [i, t_dct2.seconds,t_dct2.microseconds]
+            row = [i, t_dct2]
             writer = csv.writer(csvFile)
             writer.writerow(row)
         csvFile.close()
@@ -58,12 +58,12 @@ if __name__ == '__main__':
         
         now = datetime.now()
         dct_fft = dct(matrix,type = 2, norm = 'ortho')
-        t_fft = datetime.now() - now
+        t_fft = (datetime.now() - now).total_seconds()
         print("time fft: " + str(t_fft) + "\n")
 
         print("Writing results on CSV of fft dct\n")
         with open('results/dct2_fft.csv', 'a') as csvFile:
-            row = [i, t_fft.seconds, t_fft.microseconds]
+            row = [i, t_fft]
             writer = csv.writer(csvFile)
             writer.writerow(row)
         csvFile.close()
