@@ -6,7 +6,7 @@ from PyQt5.QtGui import QIcon, QPixmap
 
 import scipy
 from scipy.fftpack import dctn, idctn
-from scipy import misc
+import imageio
 import numpy as np
 import math
 import os
@@ -73,7 +73,7 @@ class App(QWidget):
     @pyqtSlot()
     def on_click_carica(self):
         fileName = self.openFileNameDialog()
-        print(fileName)
+        #print(fileName)
         self.file_path = fileName
 
         if(self.immage_original is not None):
@@ -97,15 +97,17 @@ class App(QWidget):
             self.textboxValue_f = int(self.textbox_f.text())
             self.textboxValue_d = int(self.textbox_d.text())
             if(self.immage_compress is not None):
-                print("ciao")
                 self.immage_compress.clear()
                 #self.destroyed.connect(lambda: self.immage_compress.clear())
-            image = misc.imread(self.file_path, flatten = 0)
+            
+            #image = misc.imread(self.file_path, flatten = 0)
+            image = imageio.imread(self.file_path)
             if (image.ndim >= 3):
                 image = image[:,:,0]
             immage_compress = self.dct_compression(image, self.textboxValue_f, self.textboxValue_d)
             path_save = self.file_path + "_compress.bmp"
-            misc.imsave(path_save, immage_compress)
+            
+            imageio.imsave(path_save, immage_compress)
 
             self.immage_compress = QLabel(self)
             pixmap = QPixmap(path_save)
