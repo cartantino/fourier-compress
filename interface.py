@@ -25,9 +25,9 @@ class App(QWidget):
         self.file_path = None
         self.textboxValue_f = 0
         self.textboxValue_d = 0
-        self.first_original = True
-        self.first_compress = True
+        self.immage_original = None
         self.immage_compress = None
+        
         self.initUI()
     
     def initUI(self):
@@ -49,7 +49,7 @@ class App(QWidget):
 
         # Create textbox for d
         self.text_d = QLabel(self)
-        self.text_d.setText('Insert D = 0 to (2F − 2)')
+        self.text_d.setText('Insert D = 0 to (2F − 2):')
         self.textbox_d = QLineEdit(self, placeholderText="")
         self.textbox_d.move(180, 150)
         self.textbox_d.resize(150,40)
@@ -75,16 +75,12 @@ class App(QWidget):
         fileName = self.openFileNameDialog()
         print(fileName)
         self.file_path = fileName
-        if(self.first_original != True):
+
+        if(self.immage_original is not None):
             self.immage_original.clear()
-        else:
-            self.first_original = False
         
-        if(self.first_compress != True):
-            if(self.immage_compress is not None):
-                self.immage_compress.clear()
-        else:
-            self.first_compress = False
+        if(self.immage_compress is not None):
+            self.immage_compress.clear()
         
         self.immage_original = QLabel(self)
         pixmap = QPixmap(fileName)
@@ -97,24 +93,27 @@ class App(QWidget):
     
     @pyqtSlot()
     def on_click_d_f(self):
-        if(not(self.first_original)):
-           self.textboxValue_f = int(self.textbox_f.text())
-           self.textboxValue_d = int(self.textbox_d.text())
+        if(self.immage_original is not None):
+            self.textboxValue_f = int(self.textbox_f.text())
+            self.textboxValue_d = int(self.textbox_d.text())
+            if(self.immage_compress is not None):
+                print("ciao")
+                self.immage_compress.clear()
+                #self.destroyed.connect(lambda: self.immage_compress.clear())
+            image = misc.imread(self.file_path, flatten = 0)
+            if (image.ndim >= 3):
+                image = image[:,:,0]
+            immage_compress = self.dct_compression(image, self.textboxValue_f, self.textboxValue_d)
+            path_save = self.file_path + "_compress.bmp"
+            misc.imsave(path_save, immage_compress)
 
-           image = misc.imread(self.file_path, flatten = 0)
-           if (image.ndim >= 3):
-               image = image[:,:,0]
-           immage_compress = self.dct_compression(image, self.textboxValue_f, self.textboxValue_d)
-           path_save = self.file_path + "_compress.bmp"
-           misc.imsave(path_save, immage_compress)
-
-           self.immage_compress = QLabel(self)
-           pixmap = QPixmap(path_save)
-           pixmap_resized = pixmap.scaled(400, 500, Qt.KeepAspectRatio)
-           self.immage_compress.setPixmap(pixmap_resized)
-           #self.resize(pixmap.width(),pixmap.height())
-           self.immage_compress.move(500,300)
-           self.immage_compress.show()
+            self.immage_compress = QLabel(self)
+            pixmap = QPixmap(path_save)
+            pixmap_resized = pixmap.scaled(400, 500, Qt.KeepAspectRatio)
+            self.immage_compress.setPixmap(pixmap_resized)
+            #self.resize(pixmap.width(),pixmap.height())
+            self.immage_compress.move(500,300)
+            self.immage_compress.show()
         else:
             QMessageBox.question(self, 'ERRORE', 'Caricare prima l\'immagine', QMessageBox.Ok, QMessageBox.Ok)
         
