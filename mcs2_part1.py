@@ -26,7 +26,7 @@ def dct_2(mat):
     return dct_1(np.transpose(dct_1(np.transpose(mat))))
 
 if __name__ == '__main__':
-    dimensions_matrix = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1500, 2000, 2500, 3000]
+    dimensions_matrix = [200, 300, 400, 500, 600, 700, 800, 900, 1000, 1500, 2000, 2500, 3000]
     if os.path.isfile('results/dct2_nostra.csv'):
         os.remove('results/dct2_nostra.csv')
     if os.path.isfile('results/dct2_fft.csv'):

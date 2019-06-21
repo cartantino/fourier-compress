@@ -25,6 +25,8 @@ class App(QWidget):
         self.file_path = None
         self.textboxValue_f = 0
         self.textboxValue_d = 0
+        self.first_original = True
+        self.first_compress = True
         self.initUI()
     
     def initUI(self):
@@ -65,6 +67,11 @@ class App(QWidget):
     def on_click_carica(self):
         fileName = self.openFileNameDialog()
         self.file_path = fileName
+        if(self.first_original != True):
+            self.immage_original.clear()
+        else:
+            self.first_original = False
+        
         self.immage_original = QLabel(self)
         pixmap = QPixmap(fileName)
         pixmap_resized = pixmap.scaled(400, 500, Qt.KeepAspectRatio)
@@ -78,6 +85,11 @@ class App(QWidget):
     def on_click_d_f(self):
         self.textboxValue_f = int(self.textbox_f.text())
         self.textboxValue_d = int(self.textbox_d.text())
+        if(self.first_compress != True):
+            self.immage_compress.hide()
+        else:
+            self.first_compress = False
+        
         image = misc.imread(self.file_path, flatten = 0)
         if (image.ndim >= 3):
             image = image[:,:,0]
@@ -97,25 +109,25 @@ class App(QWidget):
     def dct_compression(self, image, F, d):
         #compressed_image = image #copy to store the original image
         h = image.shape[0]
-        print(h)
+        #print(h)
         w = image.shape[1]
-        print(w)
+        #print(w)
         if(h%F != 0):
             h = int(h/F) * F
-            print(h)
+            #print(h)
         if(w%F != 0):
             w = int(w/F) * F
-            print(w)
+            #print(w)
         compressed_image = image[0:h, 0:w]
-        print(h)
-        print(w)
+        #print(h)
+        #print(w)
         # cycle the image in step of F
         for x in range(0,h,F):
             for y in range(0,w,F):
                 cell = compressed_image[x:x+F, y:y+F]   # width of cell = F, height of cell = F
                 #print("first cell:\n")
                 #print(cell)
-                cell = dctn(cell, norm = 'ortho') # discrete cosine transform of the selected cell
+                cell = dctn(cell, type = 2, norm = 'ortho') # discrete cosine transform of the selected cell
 
                 c_h = cell.shape[0]
                 c_w = cell.shape[1]
@@ -126,7 +138,7 @@ class App(QWidget):
                             cell[i,j] = 0 
 
                 # compute the inverse dct of the cell
-                cell = idctn(cell, norm = 'ortho')
+                cell = idctn(cell, type = 2, norm = 'ortho')
 
                 #round of ff at the nearest integer, put to 0 negative values, put to 255 bigger values
                 for i in range(0,c_h):
