@@ -4,6 +4,14 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot, Qt
 from PyQt5.QtGui import QIcon, QPixmap
 
+import scipy
+from scipy.fftpack import dctn, idctn
+from scipy import misc
+import numpy as np
+import math
+import os
+import matplotlib.pyplot as mplp
+
 
 class App(QWidget):
 
@@ -52,13 +60,6 @@ class App(QWidget):
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getOpenFileName(self,"Open", "","bmp Files (*.bmp);;All Files (*)", options=options)
         return(fileName)
-    
-    def saveFileDialog(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getSaveFileName(self,"Save","","All Files (*);;Text Files (*.txt)", options=options)
-        if fileName:
-            print(fileName)
 
     @pyqtSlot()
     def on_click_carica(self):
@@ -75,10 +76,70 @@ class App(QWidget):
     
     @pyqtSlot()
     def on_click_d_f(self):
-        self.textboxValue_f = self.textbox_f.text()
-        self.textboxValue_d = self.textbox_d.text()
-        print(self.textboxValue_f)
-        print(self.file_path)
+        self.textboxValue_f = int(self.textbox_f.text())
+        self.textboxValue_d = int(self.textbox_d.text())
+        image = misc.imread(self.file_path, flatten = 0)
+        if (image.ndim >= 3):
+            image = image[:,:,0]
+        immage_compress = self.dct_compression(image, self.textboxValue_f, self.textboxValue_d)
+        path_save = self.file_path + "_compress.bmp"
+        misc.imsave(path_save, immage_compress)
+
+        self.immage_compress = QLabel(self)
+        pixmap = QPixmap(path_save)
+        pixmap_resized = pixmap.scaled(400, 500, Qt.KeepAspectRatio)
+        self.immage_compress.setPixmap(pixmap_resized)
+        #self.resize(pixmap.width(),pixmap.height())
+        self.immage_compress.move(500,300)
+        self.immage_compress.show()
+
+
+    def dct_compression(self, image, F, d):
+        #compressed_image = image #copy to store the original image
+        h = image.shape[0]
+        print(h)
+        w = image.shape[1]
+        print(w)
+        if(h%F != 0):
+            h = int(h/F) * F
+            print(h)
+        if(w%F != 0):
+            w = int(w/F) * F
+            print(w)
+        compressed_image = image[0:h, 0:w]
+        print(h)
+        print(w)
+        # cycle the image in step of F
+        for x in range(0,h,F):
+            for y in range(0,w,F):
+                cell = compressed_image[x:x+F, y:y+F]   # width of cell = F, height of cell = F
+                #print("first cell:\n")
+                #print(cell)
+                cell = dctn(cell, norm = 'ortho') # discrete cosine transform of the selected cell
+
+                c_h = cell.shape[0]
+                c_w = cell.shape[1]
+                # delete the frequencies in the cell making reference to d parameter
+                for i in range(0,c_h):
+                    for j in range(0,c_w):
+                        if i+j >= d:
+                            cell[i,j] = 0 
+
+                # compute the inverse dct of the cell
+                cell = idctn(cell, norm = 'ortho')
+
+                #round of ff at the nearest integer, put to 0 negative values, put to 255 bigger values
+                for i in range(0,c_h):
+                    for j in range(0,c_w):
+                        value = np.round(cell[i,j])
+                        if value < 0:
+                            value = 0
+                        elif value > 255:
+                            value = 255
+                        cell[i,j] = value
+                compressed_image[x:x+F, y:y+F] = cell
+
+        return compressed_image
 
 
 if __name__ == '__main__':
