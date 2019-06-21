@@ -110,13 +110,13 @@ class App(QWidget):
                 image = image[:,:,0]
             
             # gestione errori
+            if self.textboxValue_d < 0 or self.textboxValue_f < 0:
+                QMessageBox.question(self, 'ERRORE', 'D o F negativi', QMessageBox.Ok, QMessageBox.Ok)
+                return
             if self.textboxValue_d > (2*self.textboxValue_f - 2):
                 QMessageBox.question(self, 'ERRORE', 'd > 2*F - 2', QMessageBox.Ok, QMessageBox.Ok)
                 return
-            if self.textboxValue_d < 0 | self.textboxValue_f < 0:
-                QMessageBox.question(self, 'ERRORE', 'D o F negativi', QMessageBox.Ok, QMessageBox.Ok)
-                return
-            if self.textboxValue_f > image.shape[0] | self.textboxValue_f > image.shape[1]:
+            if self.textboxValue_f > image.shape[0] or self.textboxValue_f > image.shape[1]:
                 QMessageBox.question(self, 'ERRORE', 'F più grande della dimensione dell\'immagine', QMessageBox.Ok, QMessageBox.Ok)
                 return
             
