@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog, QPushButton, QLabel, QMessageBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot, Qt
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon, QPixmap, QIntValidator
 
 import scipy
 from scipy.fftpack import dctn, idctn
@@ -43,6 +43,8 @@ class App(QWidget):
         self.text_f = QLabel(self)
         self.text_f.setText('Insert F:')
         self.textbox_f = QLineEdit(self, placeholderText="")
+        self.textbox_f.setValidator(QIntValidator())
+        self.textbox_f.setMaxLength(4)
         self.textbox_f.move(180, 100)
         self.textbox_f.resize(150,40)
         self.text_f.move(120, 110)
@@ -51,6 +53,8 @@ class App(QWidget):
         self.text_d = QLabel(self)
         self.text_d.setText('Insert D = 0 to (2F − 2):')
         self.textbox_d = QLineEdit(self, placeholderText="")
+        self.textbox_d.setValidator(QIntValidator())
+        self.textbox_d.setMaxLength(4)
         self.textbox_d.move(180, 150)
         self.textbox_d.resize(150,40)
         self.text_d.move(20, 160)
