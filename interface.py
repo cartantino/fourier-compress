@@ -27,6 +27,7 @@ class App(QWidget):
         self.textboxValue_d = 0
         self.first_original = True
         self.first_compress = True
+        self.immage_compress = None
         self.initUI()
     
     def initUI(self):
@@ -72,6 +73,7 @@ class App(QWidget):
     @pyqtSlot()
     def on_click_carica(self):
         fileName = self.openFileNameDialog()
+        print(fileName)
         self.file_path = fileName
         if(self.first_original != True):
             self.immage_original.clear()
@@ -79,7 +81,8 @@ class App(QWidget):
             self.first_original = False
         
         if(self.first_compress != True):
-            self.immage_compress.hide()
+            if(self.immage_compress is not None):
+                self.immage_compress.clear()
         else:
             self.first_compress = False
         
