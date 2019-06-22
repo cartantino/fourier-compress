@@ -77,7 +77,6 @@ class App(QWidget):
     @pyqtSlot()
     def on_click_carica(self):
         fileName = self.openFileNameDialog()
-        #print(fileName)
         self.file_path = fileName
 
         if(self.immage_original is not None):
@@ -85,7 +84,8 @@ class App(QWidget):
         
         if(self.immage_compress is not None):
             self.immage_compress.clear()
-        
+        if(fileName is ""):
+            return
         self.immage_original = QLabel(self)
         pixmap = QPixmap(fileName)
         pixmap_resized = pixmap.scaled(400, 500, Qt.KeepAspectRatio)
@@ -98,8 +98,15 @@ class App(QWidget):
     @pyqtSlot()
     def on_click_d_f(self):
         if(self.immage_original is not None):
-            self.textboxValue_f = int(self.textbox_f.text())
-            self.textboxValue_d = int(self.textbox_d.text())
+            text_f = self.textbox_f.text()
+            text_d = self.textbox_d.text()
+
+            if text_f is "" or text_d is "":
+                QMessageBox.question(self, 'ERRORE', 'D o F non inseriti', QMessageBox.Ok, QMessageBox.Ok)
+                return
+            
+            self.textboxValue_f = int(text_f)
+            self.textboxValue_d = int(text_d)
             if(self.immage_compress is not None):
                 self.immage_compress.clear()
                 #self.destroyed.connect(lambda: self.immage_compress.clear())
