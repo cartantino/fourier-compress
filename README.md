@@ -1,2 +1,2 @@
-# Secondo progetto Metodi del Calcolo Scientifico
-Calcolo della traformata per compressione immagini
+# Fourier transform to perform image compress
+
